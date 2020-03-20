@@ -14,7 +14,7 @@ setup(
   author = 'BOYUAN LIU',                   # Type in your name
   author_email = 'boyuanliu6@yahoo.com',      # Type in your E-Mail
   url = 'https://github.com/boyuan12/epidemic',   # Provide either the link to your github or to your website
-  download_url = 'https://github.com/boyuan12/epidemic/archive/0.1-alpha.tar.gz',    # I explain this later on
+  download_url = 'https://github.com/boyuan12/epidemic/archive/0.0.1-alpha.tar.gz',    # I explain this later on
   keywords = ['epidemic', 'python', 'health'],   # Keywords that define your package best
   install_requires=[            # I get to this in a second
           'numpy',
