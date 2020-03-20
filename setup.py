@@ -1,10 +1,16 @@
 from distutils.core import setup
+
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
   name = 'epidemic',         # How you named your package folder (MyLib)
   packages = ['epidemic'],   # Chose the same as "name"
   version = '0.1',      # Start with a small number and increase it with every change you make
   license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'This is a python library that can help predict when will next epidemic happen (relatively). MAY NOT BE ACCURATE',   # Give a short description about your library
+  long_description=long_description,
+  long_description_content_type="text/markdown",
   author = 'BOYUAN LIU',                   # Type in your name
   author_email = 'boyuanliu6@yahoo.com',      # Type in your E-Mail
   url = 'https://github.com/boyuan12/epidemic',   # Provide either the link to your github or to your website
