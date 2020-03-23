@@ -4,7 +4,7 @@ from distutils.core import setup
 setup(
   name = 'epidemic',         # How you named your package folder (MyLib)
   packages = ['epidemic'],   # Chose the same as "name"
-  version = '0.0.1',      # Start with a small number and increase it with every change you make
+  version = '0.0.2',      # Start with a small number and increase it with every change you make
   license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'This is a python library that can help predict when will next epidemic happen (relatively). MAY NOT BE ACCURATE',   # Give a short description about your library
   long_description='See detail description: https://epidemic.readthedocs.io',
@@ -12,7 +12,7 @@ setup(
   author = 'BOYUAN LIU',                   # Type in your name
   author_email = 'boyuanliu6@yahoo.com',      # Type in your E-Mail
   url = 'https://github.com/boyuan12/epidemic',   # Provide either the link to your github or to your website
-  download_url = 'https://github.com/boyuan12/epidemic/archive/0.0.1-alpha.tar.gz',    # I explain this later on
+  download_url = 'https://github.com/boyuan12/epidemic/archive/v0.0.2-alpha.tar.gz',    # I explain this later on
   keywords = ['epidemic', 'python', 'health'],   # Keywords that define your package best
   install_requires=[            # I get to this in a second
           'numpy',
