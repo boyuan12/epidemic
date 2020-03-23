@@ -1,7 +1,5 @@
 from distutils.core import setup
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
 
 setup(
   name = 'epidemic',         # How you named your package folder (MyLib)
@@ -9,7 +7,7 @@ setup(
   version = '0.0.1',      # Start with a small number and increase it with every change you make
   license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'This is a python library that can help predict when will next epidemic happen (relatively). MAY NOT BE ACCURATE',   # Give a short description about your library
-  long_description=long_description,
+  long_description='See detail description: https://epidemic.readthedocs.io',
   long_description_content_type="text/markdown",
   author = 'BOYUAN LIU',                   # Type in your name
   author_email = 'boyuanliu6@yahoo.com',      # Type in your E-Mail
