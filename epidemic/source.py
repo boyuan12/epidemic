@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import sys
 import os
-import argparse
 from datetime import date
 import math
 import numpy as np
@@ -14,7 +13,8 @@ from termcolor import colored
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
-history = [2009, 2013, 2014, 2015, 2016, 2020]
+import requests
+
 
 def linear_regression(input_i, output_o, return_val):
     """
@@ -37,11 +37,11 @@ def linear_regression(input_i, output_o, return_val):
 def graph(input_i, output_o):
     """
     graph, give two array and return a graph with all datapoint and line of best fit.
-    
+
     Parameters: 
     input_i (list): list with input
     output_o (list): list with output
-    
+
     Returns:
     graph: a graph contained with all datapoint provided and a line of best fit
     """
@@ -52,17 +52,19 @@ def graph(input_i, output_o):
     plt.plot(input_i, m*output_o + b)
     plt.show()
 
+
 class Predict:
     """ 
     This is a class for predicting key information/cause for a epidemic. 
-      
+
     Attributes: 
         year (int): The year that you want to estimate the value
     """
+
     def __init__(self, year):
         """ 
         The constructor for Predict class. 
-  
+
         Parameters: 
            year (int): The year that you want to estimate the value
         """
@@ -71,16 +73,16 @@ class Predict:
     def population(self):
         """ 
         The function to predict population. 
-  
+
         Returns: 
             int: predicted population
         """
         return linear_regression([1500, 1650, 1750, 1804, 1850, 1900, 1927, 1950, 1955, 1960, 1965, 1970, 1975, 1980, 1985, 1990, 1995, 1999, 2006, 2009, 2011, 2020], [450000000, 500000000, 700000000, 1000000000, 1200000000, 1600000000, 2000000000, 2550000000, 2800000000, 3000000000, 3300000000, 3700000000, 4000000000, 4500000000, 4850000000, 5300000000, 5700000000, 6000000000, 6500000000, 6800000000, 7000000000, 7800000000], self.year)
-        
+
     def climate_change(self):
         """ 
         The function to predict abnormal temperature. 
-  
+
         Returns: 
             float: predicted abnormal temperature
         """
@@ -90,7 +92,7 @@ class Predict:
     def democracy_index(self):
         """ 
         The function to predict democracy index.
-  
+
         Returns: 
             float: predicted democracy index
         """
@@ -100,7 +102,7 @@ class Predict:
     def poverty(self):
         """ 
         The function to predict abnormal temperature. 
-  
+
         Returns: 
             float: predicted abnormal temperature
         """
@@ -110,7 +112,7 @@ class Predict:
     def gdp(self):
         """ 
         The function to predict world GDP average. 
-  
+
         Returns: 
             float: predicted GDP average
         """
@@ -120,7 +122,7 @@ class Predict:
     def life_expectancy(self):
         """ 
         The function to predict world average life expectancy. 
-  
+
         Returns: 
             float: predicted life expectancy
         """
@@ -130,7 +132,7 @@ class Predict:
     def global_health_gdp_average(self):
         """ 
         The function to predict abnormal temperature. 
-  
+
         Returns: 
             float: predicted abnormal temperature
         """
@@ -140,7 +142,7 @@ class Predict:
     def flights(self):
         """ 
         The function to predict global flights count.
-  
+
         Returns: 
             float: predicted flights count
         """
@@ -178,35 +180,36 @@ def Predict_Virus_Growth(day1, day2, day3, day4, day5, predict):
     else:
         return int(linear_regression([1, 2, 3, 4, 5], [day1, day2, day3, day4, day5], predict))
 
+
 def train(predict_evidence, year):
 
-    with open("./train.csv") as f:
-        reader = csv.reader(f)
-        next(reader)
+    request = requests.get('https://boyuan12.github.io/epidemic/epidemic.csv')
+    wrapper = csv.reader(request.text.strip().split('\n'))
 
-        evidence = []
-        labels = []
+    evidence = []
+    labels = []
+    next(wrapper)
 
-        for row in reader:
+    for row in wrapper:
+        # 1 = True, 0 = False
 
-            # 1 = True, 0 = False
-            if row[2] == 'True':
-                if row[0] == str(year):
-                    return 1, 0, 1
+        if row[2] == 'True':
+            if row[0] == str(year):
+                return 1, 0, 1, str(row[1])
 
-                labels.append(1)
-            else:
-                labels.append(0)
+            labels.append(1)
+        else:
+            labels.append(0)
 
-            population = float(row[3])
-            climate_change = float(row[4])
-            democracy_index = float(row[5])
-            poverty = float(row[6])
-            global_health = float(row[7])
-            flight = float(row[8])
+        population = float(row[3])
+        climate_change = float(row[4])
+        democracy_index = float(row[5])
+        poverty = float(row[6])
+        global_health = float(row[7])
+        flight = float(row[8])
 
-            evidence.append([population, climate_change, democracy_index, poverty, global_health, flight])
-
+        evidence.append([population, climate_change,
+                         democracy_index, poverty, global_health, flight])
 
     X_train, X_test, y_train, y_test = train_test_split(
         evidence, labels, test_size=0.1
@@ -220,7 +223,7 @@ def train(predict_evidence, year):
     correct = round((y_test == predictions).sum() / len(y_test), 2)
     incorrect = round((y_test != predictions).sum() / len(y_test), 2)
 
-    return correct, incorrect, predictions
+    return correct, incorrect, predictions, None
 
 
 def Predict_Epidemic(year):
@@ -231,33 +234,44 @@ def Predict_Epidemic(year):
     poverty = Predict(year).poverty()
     global_health = Predict(year).global_health_gdp_average()
     flight = Predict(year).flights()
-    correct, incorrect, prediction = train([population, climate_change, democracy_index, poverty, global_health, flight], year)
-    return correct, incorrect, prediction
+    correct, incorrect, prediction, epi = train(
+        [population, climate_change, democracy_index, poverty, global_health, flight], year)
+    return correct, incorrect, prediction, epi
 
-def cli():
 
-    parser = argparse.ArgumentParser(description='Predict the when will next epidemic happen based using machine learning')
+def example():
 
-    parser.add_argument("year", help="Which year do you want to predict? (type 0 if you want to found closest epidemic happening year)", type=int)
-
-    args = parser.parse_args()
+    year = int(input(
+        'What year do you want to predict? (Type 0 if you want to see when is the closest epidemic year) '))
     current_year = date.today().year + 1
 
-    if args.year != 0:
-        correct, incorrect, result = Predict_Epidemic(args.year)
+    print(colored('Warning: This program may not output correct prediction.', 'yellow'))
+
+    if year != 0:
+        correct, incorrect, result, epi = Predict_Epidemic(year)
     else:
-        correct, incorrect, result = Predict_Epidemic(current_year)
+        correct, incorrect, result, epi = Predict_Epidemic(current_year)
         while result == 0:
-            correct, incorrect, result = Predict_Epidemic(current_year)
+            correct, incorrect, result, epi = Predict_Epidemic(current_year)
             current_year += 1
 
-    if args.year != 0:
+    if epi is not None:
+        print(colored(f'In 2020, {epi} happened.', 'red'))
+        sys.exit(0)
+
+    if year != 0:
         if result == 1:
-            print(colored(f'There is {correct * 100}% that an epidemic will happen in {args.year}', 'red'))
+            print(colored(
+                f'There is {correct * 100}% that an epidemic will happen in {year}', 'red'))
         else:
-            print(colored(f'There is {correct * 100}% that an epidemic will not happen in {args.year}', 'green'))
+            print(colored(
+                f'There is {correct * 100}% that an epidemic will not happen in {year}', 'green'))
     else:
         if result == 1:
-            print(colored(f'There is {correct * 100}% that an epidemic will happen in {current_year}', 'red'))
+            print(colored(
+                f'There is {correct * 100}% that an epidemic will happen in {current_year}', 'red'))
         else:
-            print(colored(f'There is {correct * 100}% that an epidemic will not happen in {current_year}', 'green'))
+            print(colored(
+                f'There is {correct * 100}% that an epidemic will not happen in {current_year}', 'green'))
+
+example()
