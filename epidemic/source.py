@@ -2,10 +2,17 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import sys
 import os
+import argparse
 from datetime import date
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+
+import csv
+
+from termcolor import colored
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
 
 history = [2009, 2013, 2014, 2015, 2016, 2020]
 
@@ -141,58 +148,6 @@ class Predict:
         return linear_regression([2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018], [27.8, 30.1, 31.2, 32, 33, 34, 35.2, 36.4, 38.1], self.year)
 
 
-def Predict_Epidemic():
-    """
-    Predict_Epidemic, predict when will next epidemic happen
-    
-    Returns:
-    graph: a graph contained with all datapoint provided and a line of best fit
-    """
-    year = date.today().year
-    probability = {}
-
-    for i in range(10):
-
-        climate_change = Predict(year).climate_change() / Predict(year-1).climate_change() # 20%
-        if climate_change < 1:
-            climate_change = -climate_change
-
-        democracy_index = Predict(year).democracy_index() / Predict(year).democracy_index() #10%
-        if democracy_index > 1:
-            democracy_index = -democracy_index
-
-        poverty = Predict(year).poverty() / Predict(year-1).poverty() # 10%
-        if poverty < 1:
-            poverty = -poverty
-
-        gdp = Predict(year).gdp() / Predict(year-1).gdp() # 10%
-        if gdp > 1:
-            gdp = -gdp
-
-        life_expectancy = Predict(year).life_expectancy() / Predict(year-1).life_expectancy() # 10%
-        if life_expectancy > 1:
-            life_expectancy = -life_expectancy
-
-        global_health_gdp_average = Predict(year).global_health_gdp_average() / Predict(year-1).global_health_gdp_average() # 30 %
-        if global_health_gdp_average > 1:
-            global_health_gdp_average = -global_health_gdp_average
-
-        flights = Predict(year).flights() # 10%
-        if poverty > 1:
-            poverty = -poverty
-
-        score = climate_change * 0.2 + democracy_index * 0.1 + poverty * 0.1 + gdp * 0.1 + life_expectancy * 0.1 + global_health_gdp_average * 0.3 + flights * 0.1
-        try:
-            probability[year] = score + probability[year-1]
-        except KeyError:
-            probability[year] = 50 + score
-        year+=1
-
-    for key in probability:
-        if probability[key] > 70:
-            return key
-
-
 def Predict_Virus_Growth(day1, day2, day3, day4, day5, predict):
     """
     Predict_Virus_Growth, predict virus/infection/death growth in given day. Use latest 5 consecutive days of data
@@ -222,3 +177,87 @@ def Predict_Virus_Growth(day1, day2, day3, day4, day5, predict):
         return int(a * (b ** predict))
     else:
         return int(linear_regression([1, 2, 3, 4, 5], [day1, day2, day3, day4, day5], predict))
+
+def train(predict_evidence, year):
+
+    with open("./train.csv") as f:
+        reader = csv.reader(f)
+        next(reader)
+
+        evidence = []
+        labels = []
+
+        for row in reader:
+
+            # 1 = True, 0 = False
+            if row[2] == 'True':
+                if row[0] == str(year):
+                    return 1, 0, 1
+
+                labels.append(1)
+            else:
+                labels.append(0)
+
+            population = float(row[3])
+            climate_change = float(row[4])
+            democracy_index = float(row[5])
+            poverty = float(row[6])
+            global_health = float(row[7])
+            flight = float(row[8])
+
+            evidence.append([population, climate_change, democracy_index, poverty, global_health, flight])
+
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        evidence, labels, test_size=0.1
+    )
+
+    model = KNeighborsClassifier(n_neighbors=3)
+    model.fit(X_train, y_train)
+
+    predictions = model.predict([predict_evidence])
+
+    correct = round((y_test == predictions).sum() / len(y_test), 2)
+    incorrect = round((y_test != predictions).sum() / len(y_test), 2)
+
+    return correct, incorrect, predictions
+
+
+def Predict_Epidemic(year):
+
+    population = Predict(year).population()
+    climate_change = Predict(year).climate_change()
+    democracy_index = Predict(year).democracy_index()
+    poverty = Predict(year).poverty()
+    global_health = Predict(year).global_health_gdp_average()
+    flight = Predict(year).flights()
+    correct, incorrect, prediction = train([population, climate_change, democracy_index, poverty, global_health, flight], year)
+    return correct, incorrect, prediction
+
+def cli():
+
+    parser = argparse.ArgumentParser(description='Predict the when will next epidemic happen based using machine learning')
+
+    parser.add_argument("year", help="Which year do you want to predict? (type 0 if you want to found closest epidemic happening year)", type=int)
+
+    args = parser.parse_args()
+    current_year = date.today().year + 1
+
+    if args.year != 0:
+        correct, incorrect, result = Predict_Epidemic(args.year)
+    else:
+        correct, incorrect, result = Predict_Epidemic(current_year)
+        while result == 0:
+            correct, incorrect, result = Predict_Epidemic(current_year)
+            current_year += 1
+
+    if args.year != 0:
+        if result == 1:
+            print(colored(f'There is {correct * 100}% that an epidemic will happen in {args.year}', 'red'))
+        else:
+            print(colored(f'There is {correct * 100}% that an epidemic will not happen in {args.year}', 'green'))
+    else:
+        if result == 1:
+            print(colored(f'There is {correct * 100}% that an epidemic will happen in {current_year}', 'red'))
+        else:
+            print(colored(f'There is {correct * 100}% that an epidemic will not happen in {current_year}', 'green'))

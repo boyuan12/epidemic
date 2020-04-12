@@ -2,4 +2,6 @@
 setup.cfg
 setup.py
 epidemic/__init__.py
-epidemic/app.py
+epidemic/predict.py
+epidemic/sample.py
+epidemic/source.py
