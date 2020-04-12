@@ -4,7 +4,7 @@ from distutils.core import setup
 setup(
   name = 'epidemic',
   packages = ['epidemic'],
-  version = '0.0.3',
+  version = '0.0.4',
   license='MIT',
   description = 'This is a python library that can help predict when will next epidemic happen (relatively). MAY NOT BE ACCURATE',   # Give a short description about your library
   long_description='See detail description: https://epidemic.readthedocs.io',
@@ -12,7 +12,7 @@ setup(
   author = 'BOYUAN LIU',
   author_email = 'boyuanliu6@yahoo.com',
   url = 'https://github.com/boyuan12/epidemic',   # Provide either the link to your github or to your website
-  download_url = 'https://github.com/boyuan12/epidemic/archive/0.0.3-alpha.tar.gz',
+  download_url = 'https://github.com/boyuan12/epidemic/archive/0.0.4-alpha.tar.gz',
   keywords = ['epidemic', 'python', 'health'],
   install_requires=[
           'numpy',
