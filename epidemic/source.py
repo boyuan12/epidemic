@@ -12,19 +12,19 @@ history = [2009, 2013, 2014, 2015, 2016, 2020]
 def linear_regression(input_i, output_o, return_val):
     """
     linear regression, give two array and a value to predict it's output.
-    
-    Parameters: 
+
+    Parameters:
     input_i (list): list with input
     output_o (list): list with output
     return_val (int): the input to predict output with
-    
+
     Returns:
     float: the predicted value based on the input (return_val), round to 3 decimal degit if needed.
     """
     input_i = np.array(input_i, dtype=float)
     output_o = np.array(output_o, dtype=float)
     m, b = np.polyfit(input_i, output_o, 1)
-    return round(m * return_val + b, 3)
+    return round(int(m) * int(return_val) + int(b), 3)
 
 
 def graph(input_i, output_o):
@@ -68,13 +68,8 @@ class Predict:
         Returns: 
             int: predicted population
         """
-        C = (1.86 + 0.01) * 10**11
-        small_t = 42+1
-        T_0 = 2007+1
-        T = self.year
-        estimated_pop_1 = (C / small_t) * math.acos((T_0 - T) / small_t)
-        return int(estimated_pop_1) - 200000000
-
+        return linear_regression([1500, 1650, 1750, 1804, 1850, 1900, 1927, 1950, 1955, 1960, 1965, 1970, 1975, 1980, 1985, 1990, 1995, 1999, 2006, 2009, 2011, 2020], [450000000, 500000000, 700000000, 1000000000, 1200000000, 1600000000, 2000000000, 2550000000, 2800000000, 3000000000, 3300000000, 3700000000, 4000000000, 4500000000, 4850000000, 5300000000, 5700000000, 6000000000, 6500000000, 6800000000, 7000000000, 7800000000], self.year)
+        
     def climate_change(self):
         """ 
         The function to predict abnormal temperature. 
@@ -201,7 +196,7 @@ def Predict_Epidemic():
 def Predict_Virus_Growth(day1, day2, day3, day4, day5, predict):
     """
     Predict_Virus_Growth, predict virus/infection/death growth in given day. Use latest 5 consecutive days of data
-    
+
     Parameters:
     day1 (int): day 1 infection/death data
     day2 (int): day 2 infection/death data
@@ -209,7 +204,7 @@ def Predict_Virus_Growth(day1, day2, day3, day4, day5, predict):
     day4 (int): day 4 infection/death data
     day5 (int): day 5 infection/death data
     predict (int): day to predict
-    
+
     Returns:
     int: virus/infection/death predicted
     """
