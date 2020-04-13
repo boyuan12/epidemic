@@ -1,9 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import sys
-import os
 from datetime import date
-import math
 import numpy as np
 import matplotlib.pyplot as plt
 
