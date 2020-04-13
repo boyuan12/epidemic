@@ -211,7 +211,7 @@ def train(predict_evidence, year):
         evidence.append([population, climate_change,
                          democracy_index, poverty, global_health, flight])
 
-    X_train, X_test, y_train, y_test = train_test_split(
+    X_train, _, y_train, y_test = train_test_split(
         evidence, labels, test_size=0.1
     )
 
@@ -248,7 +248,7 @@ def example():
     print(colored('Warning: This program may not output correct prediction.', 'yellow'))
 
     if year != 0:
-        correct, incorrect, result, epi = Predict_Epidemic(year)
+        correct, _, result, epi = Predict_Epidemic(year)
     else:
         correct, incorrect, result, epi = Predict_Epidemic(current_year)
         while result == 0:
