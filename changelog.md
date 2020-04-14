@@ -1,5 +1,16 @@
 # Changelog
 
+## v.0.0.8-alpha Release ()
+- Added a CLI
+- Removed `example` function
+- Updated `README.md`
+
+## v0.0.7-alpha Release (12 April 2020)
+- Fixed minor errors
+
+## v0.0.6-alpha Release (12 April 2020)
+- Fixed ImportError (change `cli` in `__init__.py` to `example`)
+
 ## v0.0.5-alpha Release (12 April 2020)
 - Removed CLI, turned into a function
 - Created this Changelog

@@ -3,3 +3,4 @@ setup.cfg
 setup.py
 epidemic/__init__.py
 epidemic/source.py
+bin/predict-epidemic

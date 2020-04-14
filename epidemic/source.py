@@ -181,7 +181,17 @@ def Predict_Virus_Growth(day1, day2, day3, day4, day5, predict):
         return int(linear_regression([1, 2, 3, 4, 5], [day1, day2, day3, day4, day5], predict))
 
 
-def train(predict_evidence, year):
+def train_epidemic(predict_evidence, year):
+    """
+    train the model for epidemic
+
+    Parameters:
+    predict_evidence
+    predict (int): day to predict
+
+    Returns:
+    int: virus/infection/death predicted
+    """
 
     request = requests.get('https://boyuan12.github.io/epidemic/epidemic.csv')
     wrapper = csv.reader(request.text.strip().split('\n'))
@@ -195,10 +205,13 @@ def train(predict_evidence, year):
 
         if row[2] == 'True':
             if row[0] == str(year):
-                return 1, 0, 1, str(row[1])
+                return 1, 1, str(row[1])
 
             labels.append(1)
         else:
+            if row[0] == str(year):
+                return 1, 0, 'no'
+
             labels.append(0)
 
         population = float(row[3])
@@ -223,7 +236,7 @@ def train(predict_evidence, year):
     correct = round((y_test == predictions).sum() / len(y_test), 2)
     incorrect = round((y_test != predictions).sum() / len(y_test), 2)
 
-    return correct, incorrect, predictions, None
+    return correct, predictions[0], None
 
 
 def Predict_Epidemic(year):
@@ -234,44 +247,7 @@ def Predict_Epidemic(year):
     poverty = Predict(year).poverty()
     global_health = Predict(year).global_health_gdp_average()
     flight = Predict(year).flights()
-    correct, incorrect, prediction, epi = train(
+    correct, prediction, epi = train_epidemic(
         [population, climate_change, democracy_index, poverty, global_health, flight], year)
-    return correct, incorrect, prediction, epi
+    return correct, prediction, epi
 
-
-def example():
-
-    year = int(input(
-        'What year do you want to predict? (Type 0 if you want to see when is the closest epidemic year) '))
-    current_year = date.today().year + 1
-
-    print(colored('Warning: This program may not output correct prediction.', 'yellow'))
-
-    if year != 0:
-        correct, incorrect, result, epi = Predict_Epidemic(year)
-    else:
-        correct, incorrect, result, epi = Predict_Epidemic(current_year)
-        while result == 0:
-            correct, incorrect, result, epi = Predict_Epidemic(current_year)
-            current_year += 1
-
-    if epi is not None:
-        print(colored(f'In 2020, {epi} happened.', 'red'))
-        sys.exit(0)
-
-    if year != 0:
-        if result == 1:
-            print(colored(
-                f'There is {correct * 100}% that an epidemic will happen in {year}', 'red'))
-        else:
-            print(colored(
-                f'There is {correct * 100}% that an epidemic will not happen in {year}', 'green'))
-    else:
-        if result == 1:
-            print(colored(
-                f'There is {correct * 100}% that an epidemic will happen in {current_year}', 'red'))
-        else:
-            print(colored(
-                f'There is {correct * 100}% that an epidemic will not happen in {current_year}', 'green'))
-
-example()

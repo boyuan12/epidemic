@@ -1,6 +1,16 @@
 # Epidemic Python Library
+
+[![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/boyuan12/epidemic/?ref=repository-badge)
+
 ### Introduction
 This Python Library (pip package) is created by Boyuan Liu, with purpose to help global officials to understand that the danger of epidemic. Realize that the ultimate ending (assume we have one) for human is more likely to be a pandemic rather than nuclear warface. Also realize that we are not prepared for a pandemic, from Ebola to ongoing Coronavirus.
+
+### Installation
+To install, type following command: 
+```bash
+pip3 install epidemic
+```
+to install this python library.
 
 ## Functions Description/Usage
 This python package provide following functions for users:
@@ -36,21 +46,20 @@ from epidemic import Predict_Virus_Growth
 Predict_Virus_Growth([1, 2, 3, 4, 5], [282, 314, 581, 846, 1320], 59)
 ```
 
-### Installation
-To install, type following command: 
-```bash
-pip3 install epidemic
-```
-to install this python library.
-
 # Disclaimer
 This python library shall not guaranteed that it will give correct output, especially when using `Predict` and `Predict_Epidemic`. However, this library does created based on a lot of researches done in the past. 
 
 # Author
-This is created by Boyuan Liu, if you have any question or comment want to make, please [send an email](mailto:boyuanliu6@yahoo.com?subject=[Pypi]%20epidemic%20comments) to me. 
+This is created by Boyuan Liu, if you have any question or comment want to make, please [send an email](mailto:boyuanliu6@yahoo.com?subject=[Pypi]%20epidemic%20comments) to me.
 
 # Video
 Coming Soon!
+
+# CLI
+There is a CLI available, upon install, this should automatically be availble. Execute like this:
+```bash
+predict-epidemic [-h] year
+```
 
 # Sources:
 - [Climate Change Data](https://data.giss.nasa.gov/gistemp/graphs/graph_data/Global_Mean_Estimates_based_on_Land_and_Ocean_Data/graph.txt)
@@ -63,4 +72,4 @@ Coming Soon!
 
 Thanks for reading and use this python library.
 
-Version 0.1
+Version 0.0.8
