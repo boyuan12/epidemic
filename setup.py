@@ -12,7 +12,7 @@ setup(
   author = 'BOYUAN LIU',
   author_email = 'boyuanliu6@yahoo.com',
   url = 'https://github.com/boyuan12/epidemic',
-  download_url = 'https://github.com/boyuan12/epidemic/archive/v0.0.8-alpha.tar.gz',
+  download_url = 'https://github.com/boyuan12/epidemic/archive/v0.0.9-alpha.tar.gz',
   keywords = ['epidemic', 'python', 'health'],
   install_requires=[
           'numpy',
